@@ -5,9 +5,9 @@
 int main()
 {
     KeyValuePair pairs[] = {
+        {"Truck", "White"},
         {"Car", "Red"},
         {"Bike", "Yellow"},
-        {"Truck", "White"},
         {"Bus", "Blue"},
         {"Tree", "Green"},
         {"House", "Big"},

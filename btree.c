@@ -336,7 +336,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
         fclose(file);
         return NULL;
     }
-    head->key = NewArray(char, keylen);
+    head->key = NewArray(char, keylen + 1);
     if (fread(head->key, sizeof(char), keylen, file) != keylen)
     {
         Delete(head->key);
@@ -344,6 +344,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
         fclose(file);
         return NULL;
     }
+    head->key[keylen] = '\0';
     if (!fread(&valuelen, sizeof(size_t), 1, file))
     {
         Delete(head->key);
@@ -353,7 +354,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
     }
     if (valuelen > 0)
     {
-        head->value = NewArray(char, valuelen);
+        head->value = NewArray(char, valuelen + 1);
 
         if (fread(head->value, sizeof(char), valuelen, file) != valuelen)
         {
@@ -363,6 +364,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
             fclose(file);
             return NULL;
         }
+        head->value[valuelen] = '\0';
     }
     else
     {
@@ -384,7 +386,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
             success = 0;
             break;
         }
-        if (!(key = NewArray(char, keylen)))
+        if (!(key = NewArray(char, keylen + 1)))
         {
             success = 0;
             break;
@@ -395,6 +397,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
             success = 0;
             break;
         }
+        key[keylen] = '\0';
         if (!fread(&valuelen, sizeof(size_t), 1, file))
         {
             Delete(key);
@@ -403,7 +406,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
         }
         if (valuelen > 0)
         {
-            if (!(value = NewArray(char, valuelen)))
+            if (!(value = NewArray(char, valuelen + 1)))
             {
                 Delete(key);
                 success = 0;
@@ -416,6 +419,7 @@ BinaryTreeNode *LoadBinaryTree(const char *filename)
                 success = 0;
                 break;
             }
+            value[valuelen] = '\0';
         }
         else
         {
