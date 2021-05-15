@@ -1,5 +1,4 @@
 #include "btree.h"
-#include "tokenizer.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,8 +21,5 @@ int main()
     for (int i = 0; i < 6; ++i) {
         printf("%s - %s\n", postKeys[i], postValues[i]);
     }
-
-    Tokenizer* tok = CreateTokenizer("SET this_is_key Value of the key");
-
     return 0;
 }
