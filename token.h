@@ -24,3 +24,7 @@ typedef struct
 // there is no need to implement
 // tokenizer - parser - AST - interpreter
 Token* Tokenize(const char* expression);
+
+// Checks if a token is valid. Returns the error
+// string or null if everything is fine.
+const char* ValidateToken(Token* tok);

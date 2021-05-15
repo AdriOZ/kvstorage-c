@@ -22,6 +22,11 @@ int main()
     for (int i = 0; i < 6; ++i) {
         printf("%s - %s\n", postKeys[i], postValues[i]);
     }
-    Token* tok1 = Tokenize("set car blue");
+    printf("%s\n", ValidateToken(NULL));
+    printf("%s\n", ValidateToken(Tokenize("asf  asdfaasd ")));
+    printf("%s\n", ValidateToken(Tokenize("GET")));
+    printf("%s\n", ValidateToken(Tokenize("SET")));
+    printf("%s\n", ValidateToken(Tokenize("STORE")));
+    printf("%s\n", ValidateToken(Tokenize("LOAD")));
     return 0;
 }

@@ -15,7 +15,7 @@ Token* Tokenize(const char* expression)
     if (expression == NULL) {
         return result;
     }
-    char* end = (char*)(expression + strlen(expression) + 1);
+    char* end = (char*)(expression + strlen(expression));
     char* cursor = (char*)expression;
 
     // Leading white space
@@ -57,30 +57,32 @@ Token* Tokenize(const char* expression)
     for (; cursor < end && isspace(*cursor); ++cursor)
         ;
 
-    if (*cursor == '"') {
-        cursor++;
-        subcursor = cursor;
-        counter = 0;
+    if (cursor < end) {
+        if (*cursor == '"') {
+            cursor++;
+            subcursor = cursor;
+            counter = 0;
 
-        for (; subcursor < end && *subcursor != '"'; ++subcursor, ++counter)
-            ;
+            for (; subcursor < end && *subcursor != '"'; ++subcursor, ++counter)
+                ;
 
-        if (counter > 0) {
-            part1 = NewArray(char, counter + 1);
-            strncpy(part1, cursor, counter);
-            part1[counter] = '\0';
-        }
-    } else if (cursor < end) {
-        subcursor = cursor;
-        counter = 0;
+            if (counter > 0) {
+                part1 = NewArray(char, counter + 1);
+                strncpy(part1, cursor, counter);
+                part1[counter] = '\0';
+            }
+        } else if (cursor < end) {
+            subcursor = cursor;
+            counter = 0;
 
-        for (; subcursor < end && !isspace(*subcursor); ++subcursor, ++counter)
-            ;
+            for (; subcursor < end && !isspace(*subcursor); ++subcursor, ++counter)
+                ;
 
-        if (counter > 0) {
-            part1 = NewArray(char, counter + 1);
-            strncpy(part1, cursor, counter);
-            part1[counter] = '\0';
+            if (counter > 0) {
+                part1 = NewArray(char, counter + 1);
+                strncpy(part1, cursor, counter);
+                part1[counter] = '\0';
+            }
         }
     }
 
@@ -131,4 +133,21 @@ Token* Tokenize(const char* expression)
 
     Delete(instruction);
     return result;
+}
+
+const char* ValidateToken(Token* tok)
+{
+    if (tok == NULL) {
+        return "Null token passed";
+    }
+    if (tok->type == Unknown) {
+        return "Unknown token passed";
+    }
+    if ((tok->type == Set || tok->type == Get) && (tok->key == NULL)) {
+        return "Key is mandatory for Set and Get operations";
+    }
+    if ((tok->type == Store || tok->type == Load) && (tok->filename == NULL)) {
+        return "Filename is mandatory for Store and Load operations";
+    }
+    return NULL ";
 }
