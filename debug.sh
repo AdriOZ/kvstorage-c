@@ -1,6 +1,6 @@
 gcc             \
     btree.c     \
-    tokenizer.c \
+    token.c     \
     main.c      \
 -g              \
 -o main.o

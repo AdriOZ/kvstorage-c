@@ -6,7 +6,8 @@ typedef enum {
     Get,
     Store,
     Load,
-    Quit
+    Quit,
+    Unknown
 } TokenType;
 
 // A token parsed from the input
@@ -17,3 +18,9 @@ typedef struct
     char* value;
     char* filename;
 } Token;
+
+// Returns the token of an specific expression.
+// As only single expressions will be interpreted,
+// there is no need to implement
+// tokenizer - parser - AST - interpreter
+Token* Tokenize(const char* expression);
