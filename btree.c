@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "util.h"
 #include "btree.h"
@@ -161,6 +162,35 @@ static void GetValues(BinaryTreeNode *tree, char **values, int *index)
     }
 }
 
+static void Store(FILE *file, BinaryTreeNode *tree)
+{
+    static size_t zerolen = 0;
+    fwrite(&tree->id, sizeof(long), 1, file);
+    size_t keylen = strlen(tree->key);
+    fwrite(&keylen, sizeof(size_t), 1, file);
+    fwrite(tree->key, sizeof(char), keylen, file);
+
+    if (tree->value != NULL)
+    {
+        size_t valuelen = strlen(tree->value);
+        fwrite(&valuelen, sizeof(size_t), 1, file);
+        fwrite(tree->value, sizeof(char), valuelen, file);
+    }
+    else
+    {
+
+        fwrite(&zerolen, sizeof(size_t), 1, file);
+    }
+    if (tree->right != NULL)
+    {
+        Store(file, tree->right);
+    }
+    if (tree->left != NULL)
+    {
+        Store(file, tree->left);
+    }
+}
+
 /* PUBLIC */
 
 BinaryTreeNode *CreateBinaryTree(const char *key, const char *value)
@@ -259,10 +289,143 @@ char **GetBinaryTreeValues(BinaryTreeNode *tree)
 
 int StoreBinaryTree(const char *filename, BinaryTreeNode *tree)
 {
-    return 0;
+    if (tree == NULL || filename == NULL || strlen(filename) <= 0)
+    {
+        return 0;
+    }
+    FILE *file = fopen(filename, "wb");
+
+    if (!file)
+    {
+        return 0;
+    }
+    Store(file, tree);
+    fclose(file);
+    return 1;
 }
 
 BinaryTreeNode *LoadBinaryTree(const char *filename)
 {
-    return NULL;
+    if (filename == NULL || strlen(filename) <= 0)
+    {
+        return NULL;
+    }
+    FILE *file = fopen(filename, "rb");
+
+    if (!file)
+    {
+        return NULL;
+    }
+    BinaryTreeNode *head = New(BinaryTreeNode);
+    long id;
+    size_t keylen;
+    char *key;
+    size_t valuelen;
+    char *value;
+    int success;
+
+    if (!fread(&head->id, sizeof(long), 1, file))
+    {
+        Delete(head);
+        fclose(file);
+        return NULL;
+    }
+    if (!fread(&keylen, sizeof(size_t), 1, file))
+    {
+        Delete(head);
+        fclose(file);
+        return NULL;
+    }
+    head->key = NewArray(char, keylen);
+    if (fread(head->key, sizeof(char), keylen, file) != keylen)
+    {
+        Delete(head->key);
+        Delete(head);
+        fclose(file);
+        return NULL;
+    }
+    if (!fread(&valuelen, sizeof(size_t), 1, file))
+    {
+        Delete(head->key);
+        Delete(head);
+        fclose(file);
+        return NULL;
+    }
+    if (valuelen > 0)
+    {
+        head->value = NewArray(char, valuelen);
+
+        if (fread(head->value, sizeof(char), valuelen, file) != valuelen)
+        {
+            Delete(head->key);
+            Delete(head->value);
+            Delete(head);
+            fclose(file);
+            return NULL;
+        }
+    }
+    else
+    {
+        head->value = NULL;
+    }
+    head->right = NULL;
+    head->left = NULL;
+    success = 1;
+
+    while (success)
+    {
+        if (!fread(&id, sizeof(long), 1, file))
+        {
+            success = 0;
+            break;
+        }
+        if (!fread(&keylen, sizeof(size_t), 1, file))
+        {
+            success = 0;
+            break;
+        }
+        if (!(key = NewArray(char, keylen)))
+        {
+            success = 0;
+            break;
+        }
+        if (fread(key, sizeof(char), keylen, file) != keylen)
+        {
+            Delete(key);
+            success = 0;
+            break;
+        }
+        if (!fread(&valuelen, sizeof(size_t), 1, file))
+        {
+            Delete(key);
+            success = 0;
+            break;
+        }
+        if (valuelen > 0)
+        {
+            if (!(value = NewArray(char, valuelen)))
+            {
+                Delete(key);
+                success = 0;
+                break;
+            }
+            if (fread(value, sizeof(char), valuelen, file) != valuelen)
+            {
+                Delete(key);
+                Delete(value);
+                success = 0;
+                break;
+            }
+        }
+        else
+        {
+            value = NULL;
+        }
+        Insert(head, id, key, value);
+        Delete(key);
+        Delete(value);
+    }
+
+    fclose(file);
+    return head;
 }

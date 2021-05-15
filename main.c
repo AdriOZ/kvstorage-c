@@ -4,20 +4,23 @@
 
 int main()
 {
-    KeyValuePair pairs[4] = {
+    KeyValuePair pairs[] = {
         {"Car", "Red"},
         {"Bike", "Yellow"},
         {"Truck", "White"},
         {"Bus", "Blue"},
+        {"Tree", "Green"},
+        {"House", "Big"},
     };
-    BinaryTreeNode *head = CreateBinaryTreeFrom(4, pairs);
+    BinaryTreeNode *pre = CreateBinaryTreeFrom(6, pairs);
+    StoreBinaryTree("test.btree", pre);
+    BinaryTreeNode *post = LoadBinaryTree("test.btree");
+    char **postKeys = GetBinaryTreeKeys(post);
+    char **postValues = GetBinaryTreeValues(post);
 
-    char **keys = GetBinaryTreeKeys(head);
-    char **values = GetBinaryTreeValues(head);
-
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 6; ++i)
     {
-        printf("Vehicle %s is %s\n", keys[i], values[i]);
+        printf("%s - %s\n", postKeys[i], postValues[i]);
     }
 
     return 0;
