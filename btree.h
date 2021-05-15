@@ -28,7 +28,7 @@ BinaryTreeNode* CreateBinaryTreeFrom(int lenght, KeyValuePair* pairs);
 void PutBinaryTreeNode(BinaryTreeNode* tree, const char* key, const char* value);
 
 // Returns the value of the specified key
-char* GetBinaryTreeNode(BinaryTreeNode* tree, const char* key);
+char* GetBinaryTreeValue(BinaryTreeNode* tree, const char* key);
 
 // Stores the binary tree in a file
 int StoreBinaryTree(const char* filename, BinaryTreeNode* tree);

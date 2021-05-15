@@ -205,7 +205,7 @@ void PutBinaryTreeNode(BinaryTreeNode* tree, const char* key, const char* value)
     Insert(tree, Hash(key), key, value);
 }
 
-char* GetBinaryTreeNode(BinaryTreeNode* tree, const char* key)
+char* GetBinaryTreeValue(BinaryTreeNode* tree, const char* key)
 {
     if (tree == NULL || key == NULL) {
         return NULL;

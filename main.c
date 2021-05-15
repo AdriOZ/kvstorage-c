@@ -1,32 +1,84 @@
 #include "btree.h"
 #include "token.h"
+#include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main()
 {
-    KeyValuePair pairs[] = {
-        { "Truck", "White" },
-        { "Car", "Red" },
-        { "Bike", "Yellow" },
-        { "Bus", "Blue" },
-        { "Tree", "Green" },
-        { "House", "Big" },
-    };
-    BinaryTreeNode* pre = CreateBinaryTreeFrom(6, pairs);
-    StoreBinaryTree("test.btree", pre);
-    BinaryTreeNode* post = LoadBinaryTree("test.btree");
-    char** postKeys = GetBinaryTreeKeys(post);
-    char** postValues = GetBinaryTreeValues(post);
+    BinaryTreeNode* tree = NULL;
+    Token* tok = NULL;
+    const char* error = NULL;
+    char input[1024];
+    char clear;
+    int run = 1;
+    int ignore;
 
-    for (int i = 0; i < 6; ++i) {
-        printf("%s - %s\n", postKeys[i], postValues[i]);
+    while (run) {
+        // Reading
+        printf("$> ");
+        ignore = scanf("%1023[^\n]", input);
+        ignore = scanf("%c", &clear);
+
+        // Parsing
+        tok = Tokenize(input);
+        error = ValidateToken(tok);
+
+        // Errors
+        if (error != NULL) {
+            printf("\nError: %s\n\n", error);
+            Delete(tok);
+            continue;
+        }
+
+        // Interpret
+        switch (tok->type) {
+        case Set:
+            if (tree == NULL) {
+                tree = CreateBinaryTree(tok->key, tok->value);
+            } else {
+                PutBinaryTreeNode(tree, tok->key, tok->value);
+            }
+            break;
+        case Get:
+            if (tree == NULL) {
+                printf("\nError: no data saved yet\n\n");
+            } else {
+                printf("\n%s\n\n", GetBinaryTreeValue(tree, tok->key));
+            }
+            break;
+        case Store:
+            if (tree == NULL) {
+                printf("\nError: no data saved yet\n\n");
+            } else {
+                if (StoreBinaryTree(tok->filename, tree)) {
+                    printf("\nData saved into file '%s'\n\n", tok->filename);
+                } else {
+                    printf("\nError: cannot save data saved into file '%s'\n\n", tok->filename);
+                }
+            }
+            break;
+        case Load:
+            if (tree != NULL) {
+                printf("\nError: cannot override existing data\n\n");
+            } else {
+                tree = LoadBinaryTree(tok->filename);
+
+                if (tree != NULL) {
+                    printf("\nData imported from '%s'\n\n", tok->filename);
+                } else {
+                    printf("\nError: cannot import data from '%s'\n\n", tok->filename);
+                }
+            }
+            break;
+        case Quit:
+            run = 0;
+            break;
+        default:
+            break;
+        }
+        Delete(tok);
     }
-    printf("%s\n", ValidateToken(NULL));
-    printf("%s\n", ValidateToken(Tokenize("asf  asdfaasd ")));
-    printf("%s\n", ValidateToken(Tokenize("GET")));
-    printf("%s\n", ValidateToken(Tokenize("SET")));
-    printf("%s\n", ValidateToken(Tokenize("STORE")));
-    printf("%s\n", ValidateToken(Tokenize("LOAD")));
+
     return 0;
 }
