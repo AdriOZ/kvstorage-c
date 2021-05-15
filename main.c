@@ -1,4 +1,5 @@
 #include "btree.h"
+#include "token.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,5 +22,6 @@ int main()
     for (int i = 0; i < 6; ++i) {
         printf("%s - %s\n", postKeys[i], postValues[i]);
     }
+    Token* tok1 = Tokenize("set car blue");
     return 0;
 }
