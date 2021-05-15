@@ -4,13 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static long Hash(const char* key)
+static size_t Hash(const char* key)
 {
     if (key == NULL) {
         return 0;
     }
 
-    long hash = 0;
+    size_t hash = 0;
     int index = 0;
 
     while (key[index] != '\0') {
@@ -20,7 +20,7 @@ static long Hash(const char* key)
     return hash;
 }
 
-static void Insert(BinaryTreeNode* tree, long id, const char* key, const char* value)
+static void Insert(BinaryTreeNode* tree, size_t id, const char* key, const char* value)
 {
     // Equal
     if (id == tree->id) {
@@ -79,7 +79,7 @@ static void Insert(BinaryTreeNode* tree, long id, const char* key, const char* v
     return;
 }
 
-static char* Find(BinaryTreeNode* tree, long id)
+static char* Find(BinaryTreeNode* tree, size_t id)
 {
     if (id == tree->id) {
         return tree->value;
@@ -139,7 +139,7 @@ static void GetValues(BinaryTreeNode* tree, char** values, int* index)
 static void Store(FILE* file, BinaryTreeNode* tree)
 {
     static size_t zerolen = 0;
-    fwrite(&tree->id, sizeof(long), 1, file);
+    fwrite(&tree->id, sizeof(size_t), 1, file);
     size_t keylen = strlen(tree->key);
     fwrite(&keylen, sizeof(size_t), 1, file);
     fwrite(tree->key, sizeof(char), keylen, file);
@@ -270,14 +270,14 @@ BinaryTreeNode* LoadBinaryTree(const char* filename)
         return NULL;
     }
     BinaryTreeNode* head = New(BinaryTreeNode);
-    long id;
+    size_t id;
     size_t keylen;
     char* key;
     size_t valuelen;
     char* value;
     int success;
 
-    if (!fread(&head->id, sizeof(long), 1, file)) {
+    if (!fread(&head->id, sizeof(size_t), 1, file)) {
         Delete(head);
         fclose(file);
         return NULL;
@@ -320,7 +320,7 @@ BinaryTreeNode* LoadBinaryTree(const char* filename)
     success = 1;
 
     while (success) {
-        if (!fread(&id, sizeof(long), 1, file)) {
+        if (!fread(&id, sizeof(size_t), 1, file)) {
             success = 0;
             break;
         }

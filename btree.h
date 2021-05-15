@@ -1,8 +1,10 @@
 #pragma once
 
+#include <stdlib.h>
+
 // Represents a node of the tree
 typedef struct s_BinaryTreeNode {
-    long id;
+    size_t id;
     char* key;
     char* value;
     struct s_BinaryTreeNode* left;
