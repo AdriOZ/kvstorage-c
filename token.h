@@ -28,3 +28,6 @@ Token* Tokenize(const char* expression);
 // Checks if a token is valid. Returns the error
 // string or null if everything is fine.
 const char* ValidateToken(Token* tok);
+
+// Frees the memory of the token.
+void DeleteToken(Token* tok);

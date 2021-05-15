@@ -149,5 +149,16 @@ const char* ValidateToken(Token* tok)
     if ((tok->type == Store || tok->type == Load) && (tok->filename == NULL)) {
         return "Filename is mandatory for Store and Load operations";
     }
-    return NULL ";
+    return NULL;
+}
+
+void DeleteToken(Token* tok)
+{
+    if (tok == NULL) {
+        return;
+    }
+    Delete(tok->key);
+    Delete(tok->value);
+    Delete(tok->filename);
+    Delete(tok);
 }
