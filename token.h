@@ -1,8 +1,7 @@
 #pragma once
 
 // The types of tokens that will be parsed
-typedef enum
-{
+typedef enum {
     Set,
     Get,
     Store,
@@ -14,7 +13,7 @@ typedef enum
 typedef struct
 {
     TokenType type;
-    char *key;
-    char *value;
-    char *filename;
+    char* key;
+    char* value;
+    char* filename;
 } Token;
