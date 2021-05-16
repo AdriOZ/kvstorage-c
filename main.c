@@ -39,6 +39,7 @@ int main()
             } else {
                 PutBinaryTreeNode(tree, tok->key, tok->value);
             }
+            printf("\nSaved\n\n");
             break;
         case Get:
             if (tree == NULL) {
