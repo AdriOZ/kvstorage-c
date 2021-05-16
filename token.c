@@ -71,6 +71,7 @@ Token* Tokenize(const char* expression)
                 strncpy(part1, cursor, counter);
                 part1[counter] = '\0';
             }
+            ++subcursor; // Skip '"'
         } else if (cursor < end) {
             subcursor = cursor;
             counter = 0;
