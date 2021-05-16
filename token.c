@@ -44,7 +44,7 @@ Token* Tokenize(const char* expression)
     }
 
     // Type Quit -> No more processing
-    if (strcmp("QUIT", instruction) == 0) {
+    if (strcmp("QUIT", instruction) == 0 || strcmp("EXIT", instruction) == 0) {
         Delete(instruction);
         result->type = Quit;
         return result;
@@ -88,14 +88,14 @@ Token* Tokenize(const char* expression)
     }
 
     // Types Get, Store, Load -> No more processing
-    if (strcmp("GET", instruction) == 0) {
+    if (strcmp("GET", instruction) == 0 || strcmp("FIND", instruction) == 0) {
         Delete(instruction);
         result->type = Get;
         result->key = part1;
         return result;
     }
 
-    if (strcmp("STORE", instruction) == 0) {
+    if (strcmp("STORE", instruction) == 0 || strcmp("SAVE", instruction) == 0) {
         Delete(instruction);
         result->type = Store;
         result->filename = part1;
@@ -110,7 +110,7 @@ Token* Tokenize(const char* expression)
     }
 
     // Type Set
-    if (strcmp("SET", instruction) == 0) {
+    if (strcmp("SET", instruction) == 0 || strcmp("PUT", instruction) == 0) {
         Delete(instruction);
         result->type = Set;
         result->key = part1;
