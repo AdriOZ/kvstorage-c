@@ -5,6 +5,6 @@ fi
 
 rm -f build/*
 
-gcc src/*.c -g -lm -std=c18 -o build/debug.o
+gcc src/*.c -g -lm -std=c18 -O3 -o build/main.o
 
-build/debug.o
+build/main.o
