@@ -12,13 +12,12 @@ int main()
     char input[1024];
     char clear;
     int run = 1;
-    int ignore;
 
     while (run) {
         // Reading
         printf("$> ");
-        ignore = scanf("%1023[^\n]", input);
-        ignore = scanf("%c", &clear);
+        scanf_s("%1023[^\n]", input, 1023);
+        scanf_s("%c", &clear, 1);
 
         // Parsing
         tok = Tokenize(input);
